@@ -1,38 +1,28 @@
-﻿using Infrastructure.Http;
-using Infrastructure.Repositories.Implementations;
-using Infrastructure.Repositories.Interfaces;
-using Infrastructure.Sessions;
-using Infrastructure.ShortLink;
-using Microsoft.Extensions.DependencyInjection;
+﻿using BillProcessorAPI.Repositories.Implementations;
+using BillProcessorAPI.Repositories.Interfaces;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Retry;
-using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+using TransactionMonitoringService.Helpers;
+using TransactionMonitoringService.Helpers.Https;
 
-namespace Infrastructure
+namespace TransactionMonitoringService.ServiceExtension
 {
-    public static class ServiceCollection
+    public static class ServiceCollections
     {
-        public static void AddInfrastructureServices(this IServiceCollection services)
-        {
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IUserActivityRepository, UserActivityRepository>();
-            services.AddScoped<IMessageLogRepository, MessageLogRepository>();
-            services.AddScoped<IWhatsappUserRepository, WhatsappUserRepository>();
-            services.AddScoped<ISessionManagement, SessionManagement>();
-            services.AddScoped<ICutlyService, CutlyService>();
-
-        }
-
         public static void AddHttpClientInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IHttpService, HttpService>();
 
             services.AddHttpClient("GamaWabsAPI")
                     .AddPolicyHandler(GetPollyPolicy("GamaWabsAPI"));
+        }
 
+        public static void RegisterServices(this IServiceCollection services)
+        {
+            services.AddOptions<MailSettings>().BindConfiguration(nameof(MailSettings));
+            services.AddOptions<FlwaveOptions>().BindConfiguration(nameof(FlwaveOptions));
+            services.AddScoped<IBillTransactionRepository, BillTransactionRespository>();
         }
 
         /// <summary>
@@ -49,7 +39,7 @@ namespace Infrastructure
                             {
                                 Console.WriteLine($"Retrying call to api for service name {name}");
                                 return Task.CompletedTask;
-                            } );
+                            });
 
         }
     }

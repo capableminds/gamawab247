@@ -1,6 +1,5 @@
 ﻿using Domain.Common;
 using Domain.Exceptions;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -9,8 +8,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Http;
