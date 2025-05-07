@@ -6,6 +6,7 @@
         Successful,
         Created,
         Failed,
-        Unsuccessful
+        Unsuccessful,
+        RECONCILIATION_NEEDED
     }
 }
